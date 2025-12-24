@@ -261,17 +261,16 @@ const songs = [
     }
 
     function showQuestion() {
-      const q = questions[step];
-      quiz.innerHTML = `
-        <div class="question">
-          <h2>${q.title}</h2>
-          <div class="options glowable">
-            <div class="option c1" onclick="answer(0)">${q.options[0]}</div>
-            <div class="option c2" onclick="answer(1)">${q.options[1]}</div>
-            <div class="option c3" onclick="answer(2)">${q.options[2]}</div>
-          </div>
-        </div>
-      `;
+  quiz.style.display = 'block';   // ← 一定要有這行
+  result.style.display = 'none';
+
+  const q = questions[step];
+  document.getElementById('question').textContent = q.text;
+
+  const options = document.querySelectorAll('.option');
+  options.forEach((btn, i) => {
+    btn.textContent = q.options[i];
+  });
     }
     quiz.style.display = 'block';
     function getYouTubeId(url) {
