@@ -2,165 +2,202 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>我的自我介紹</title>
+  <title>歌曲推薦小測驗</title>
   <style>
-    * {
-      box-sizing: border-box;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    }
-
     body {
       margin: 0;
-      background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
       min-height: 100vh;
+      background: #000;
+      color: #fff;
+      font-family: "Segoe UI", Arial, sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
     }
 
+    /* 空靈感黃色點綴 */
+    body::before, body::after {
+      content: "";
+      position: fixed;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(255,215,0,0.35), transparent 70%);
+      z-index: 0;
+    }
+
+    body::before {
+      top: -100px;
+      left: -100px;
+    }
+
+    body::after {
+      bottom: -100px;
+      right: -100px;
+    }
+
     .card {
-      background: white;
+      position: relative;
+      z-index: 1;
       width: 90%;
-      max-width: 800px;
+      max-width: 700px;
+      background: rgba(20, 20, 20, 0.9);
       border-radius: 20px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-      overflow: hidden;
-    }
-
-    header {
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      color: white;
-      padding: 40px 20px;
-      text-align: center;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 2.5rem;
-    }
-
-    header p {
-      margin-top: 10px;
-      font-size: 1.2rem;
-      opacity: 0.9;
-    }
-
-    .content {
       padding: 30px;
+      box-shadow: 0 0 40px rgba(255, 215, 0, 0.15);
     }
 
-    .section {
-      margin-bottom: 30px;
-    }
-
-    .section h2 {
-      margin-bottom: 10px;
-      color: #667eea;
-      border-left: 5px solid #667eea;
-      padding-left: 10px;
-    }
-
-    .section p, .section li {
-      line-height: 1.8;
-      font-size: 1.05rem;
-    }
-
-    ul {
-      padding-left: 20px;
-    }
-
-    footer {
+    h1 {
       text-align: center;
+      margin-top: 0;
+      color: #ffd700;
+    }
+
+    .question {
+      margin-top: 30px;
+    }
+
+    .question h2 {
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+    }
+
+    .option {
       padding: 15px;
-      background: #f5f5f5;
-      color: #666;
-      font-size: 0.9rem;
-    }
-
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 2rem;
-      }
-    }
-      .qa-btn {
-      display: block;
-      margin: 10px 0;
-      padding: 10px 15px;
-      font-size: 1rem;
-      border: none;
-      border-radius: 10px;
-      background: #667eea;
-      color: white;
+      border-radius: 15px;
+      text-align: center;
       cursor: pointer;
+      font-weight: bold;
+      transition: transform 0.15s, box-shadow 0.15s;
     }
 
-    .qa-btn:hover {
-      opacity: 0.85;
+    .option:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.4);
     }
 
-    .answer {
+    /* 每個選項的顏色（你可以自己改） */
+    .c1 { background: #f87171; }
+    .c2 { background: #60a5fa; }
+    .c3 { background: #34d399; }
+
+    .result {
       display: none;
-      margin: 5px 0 15px 0;
-      padding-left: 10px;
-      color: #333;
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .song {
+      font-size: 1.4rem;
+      margin-top: 10px;
+      color: #ffd700;
+    }
+
+    button {
+      margin-top: 25px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 20px;
+      background: #ffd700;
+      color: #000;
+      font-size: 1rem;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <div class="card">
-    <header>
-      <h1>日安 我是楊馥丞</h1>
-      <p>10｜INTJ｜♌</p>
-    </header>
+    <h1>🎵 歌曲推薦小測驗</h1>
 
-    <div class="content">
-      <div class="section">
-        <h2>❓ 你對版主有多了解!!!</h2>
-        <p>點擊問題看看答案：</p>
-        <button class="qa-btn" onclick="toggleAnswer('a1')">我最喜歡的顏色是什麼?</button>
-        <p id="a1" class="answer">黃色/綠色</p>
-
-        <button class="qa-btn" onclick="toggleAnswer('a2')">我的生日是什麼時候?</button>
-        <p id="a2" class="answer">8/13!</p>
-      </div>
-      <div class="section">
-        <h2>👤 關於我</h2>
-        <p>
-          喜歡的東西:可爾必思、音樂、吉他、可愛的東西
-          討厭的東西:很吵的地方、人多的地方
-        </p>
-      </div>
-
-      <div class="section">
-        <h2>⭐ 我的興趣</h2>
-        <ul>
-          <li>打遊戲(第五人格＆世界計畫)</li>
-          <li>畫圖</li>
-          <li>唱歌</li>
-        </ul>
-      </div>
-
-      <div class="section">
-        <h2>🎯 我的目標</h2>
-        <p>
-          希望能勇敢的活下去( •̀ ω •́ )✧
-        </p>
+    <div id="quiz">
+      <div class="question">
+        <h2>Q1. 你現在的心情比較接近？</h2>
+        <div class="options">
+          <div class="option c1" onclick="answer(0)">平靜</div>
+          <div class="option c2" onclick="answer(1)">開心</div>
+          <div class="option c3" onclick="answer(2)">有點低落</div>
+        </div>
       </div>
     </div>
 
-    <footer>
-      © 2025 我的自我介紹網頁｜電腦課期末作業
-    </footer>
+    <div class="result" id="result">
+      <h2>推薦給你的歌曲是：</h2>
+      <div class="song" id="song"></div>
+      <button onclick="location.reload()">再測一次</button>
+    </div>
   </div>
+
   <script>
-    function toggleAnswer(id) {
-      const answer = document.getElementById(id);
-      if (answer.style.display === 'none' || answer.style.display === '') {
-        answer.style.display = 'block';
-      } else {
-        answer.style.display = 'none';
+    /* =========================
+       你主要會改的地方在這裡
+       ========================= */
+
+    // 三題題目（每題三個選項）
+    const questions = [
+      {
+        title: 'Q1. 你現在的心情比較接近？',
+        options: ['平靜', '開心', '有點低落']
+      },
+      {
+        title: 'Q2. 你比較喜歡什麼時間聽音樂？',
+        options: ['深夜', '下午', '早上']
+      },
+      {
+        title: 'Q3. 你偏好的音樂感覺？',
+        options: ['溫柔', '節奏感', '情緒濃']
       }
+    ];
+
+    // 歌曲清單（可以放 20 幾首都沒問題）
+    const songs = [
+      '歌曲 A', '歌曲 B', '歌曲 C', '歌曲 D', '歌曲 E',
+      '歌曲 F', '歌曲 G', '歌曲 H', '歌曲 I'
+    ];
+
+    /* ========================= */
+
+    let step = 0;
+    let score = 0;
+
+    const quiz = document.getElementById('quiz');
+    const result = document.getElementById('result');
+    const songBox = document.getElementById('song');
+
+    function answer(choice) {
+      score += choice;
+      step++;
+
+      if (step < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showQuestion() {
+      const q = questions[step];
+      quiz.innerHTML = `
+        <div class="question">
+          <h2>${q.title}</h2>
+          <div class="options">
+            <div class="option c1" onclick="answer(0)">${q.options[0]}</div>
+            <div class="option c2" onclick="answer(1)">${q.options[1]}</div>
+            <div class="option c3" onclick="answer(2)">${q.options[2]}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function showResult() {
+      quiz.style.display = 'none';
+      result.style.display = 'block';
+      const index = score % songs.length;
+      songBox.textContent = songs[index];
     }
   </script>
 </body>
