@@ -44,7 +44,7 @@
       background: rgba(18, 18, 18, 0.92);
       border-radius: 24px;
       padding: 35px;
-      box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 40px rgba(255,215,0,0.15);
+      box-shadow: 0 30px 60px #00000099, 0 0 40px rgba(255,215,0,0.15);
     }
 
     h1 {
@@ -56,14 +56,45 @@
 
     /* ===== 可自行調整的全域光暈顏色 ===== */
     :root {
-      --glow-color: rgba(255, 215, 0, 0.75); /* ← 只改這裡就好 */
-    }
+  /* ===== 全站光暈顏色（所有發光效果） ===== */
+  /* 改這個會影響：選項、卡片、結果、按鈕、縮圖 */
+  /* 使用 Hex 色碼（含透明度）：#RRGGBBAA */
+  /* 最後兩碼 AA 是透明度，00=全透明，FF=不透明 */
+  --glow-color: #FFD700BF; /* 黃色光暈，約 75% 透明 */ 
 
-    /* 除標題外的通用光暈效果 */
+  /* ===== 主背景顏色（整個網頁） ===== */
+  --bg-color: #000000;
+
+  /* ===== 文字主要顏色 ===== */
+  --text-color: #f5f5f5;
+}
+
+    /* 除標題外的通用光暈效果 + 漂浮動畫 */
     .glowable {
       box-shadow:
         0 0 12px var(--glow-color),
         0 0 24px rgba(0,0,0,0.6);
+      animation: float 6s ease-in-out infinite;
+    }
+
+    /* ===== 漂浮動畫（微微上下＋左右） ===== */
+    /* 看起來舒服，不會暈 */
+    @keyframes float {
+      0% {
+        transform: translate(0px, 0px);
+      }
+      25% {
+        transform: translate(2px, -4px);
+      }
+      50% {
+        transform: translate(0px, -6px);
+      }
+      75% {
+        transform: translate(-2px, -4px);
+      }
+      100% {
+        transform: translate(0px, 0px);
+      }
     }
 
     .question {
@@ -103,9 +134,9 @@
     }
 
     /* 選項顏色（可自行修改） */
-    .c1 { background: linear-gradient(135deg, #ffb703, #fb8500); }
-    .c2 { background: linear-gradient(135deg, #60a5fa, #2563eb); }
-    .c3 { background: linear-gradient(135deg, #34d399, #059669); }
+    .c1 { background: linear-gradient(135deg, #EEDC3E, #C0E479); }
+    .c2 { background: linear-gradient(135deg, #97CEDC, #B597DC); }
+    .c3 { background: linear-gradient(135deg, #4EFF7E, #9EE9E2); }
 
     .result {
       display: none;
@@ -132,7 +163,7 @@
       margin-top: 18px;
       padding: 10px 24px;
       border-radius: 30px;
-      background: #ffd700;
+      background: #EEDC3E;
       color: #000;
       text-decoration: none;
       font-weight: bold;
@@ -143,7 +174,7 @@
       padding: 10px 24px;
       border: none;
       border-radius: 30px;
-      background: #333;
+      background: #97CEDC;
       color: #fff;
       cursor: pointer;
     }
@@ -173,31 +204,47 @@
     /* ===== 你主要會改的地方 ===== */
 
     const questions = [
-      { title: 'Q1. 你現在的心情比較接近？', options: ['平靜', '開心', '低落'] },
-      { title: 'Q2. 你喜歡什麼時間聽音樂？', options: ['深夜', '下午', '早上'] },
-      { title: 'Q3. 你偏好的音樂感覺？', options: ['溫柔', '節奏感', '情緒濃'] }
+      { title: 'Q1. 你走在狹窄的林間小道上，前方的路變得開闊，你看見了:', options: ['詭譎駭人的古堡', '莊嚴華麗的宅邸', '溫馨質樸的木屋'] },
+      { title: 'Q2. 你靠近了一些，前方出現了一個人。那個人是:', options: ['身著白衣的美麗女孩', '拄著拐杖的智慧老者', '叛逆不羈的狼族少年'] },
+      { title: 'Q3. 這個人的腳下綻放著優雅的花，這種花是:', options: ['雛菊', '杜鵑', '玫瑰'] }
     ];
 
     // 每首歌只需要放：名稱 + YouTube 連結（縮圖會自動抓）
-    const songs = [
-      {
-        name: '歌曲 A',
-        url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-      },
-      {
-        name: '歌曲 B',
-        url: 'https://youtu.be/3tmd-ClpJxA'
-      },
-      {
-        name: '歌曲 C',
-        url: 'https://www.youtube.com/watch?v=OPf0YbXqDm0'
-      }
-    ];
+    // ===== 27 首歌（你只要改 name 跟 url）=====
+const songs = [
+  { name: 'Tonught you belong to me', url: 'https://youtu.be/x5Splw6Sfj0?si=5OLWperV2gAGYqxt' },
+  { name: 'ド屑', url: 'https://youtu.be/5XehRIb81k8?si=dLkA9fRdI2n2S_FJ' },
+  { name: 'Favorite', url: 'https://youtu.be/XKR3SfC6DdQ?si=9bWe3IJcoPEpVm2F' },
+  { name: 'Like him', url: 'https://youtu.be/Z0CQf3JDKAY?si=Vty5d_yBK-2bre-d' },
+  { name: 'КАМИН', url: 'https://youtu.be/nOeJuoFs6sM?si=CP5EuznEo5HC34XT' },
+  { name: 'Beanie', url: 'https://youtu.be/tERTBPdVivc?si=hhm9Tc6zRiPSMdz3' },
+  { name: '偽物人間40号', url: 'https://youtu.be/MevxhEYIMfs?si=pzxUS3m2mcnzHrm4' },
+  { name: 'Nowhere', url: 'https://youtu.be/g6HahdpLNx0?si=NsvHXaOrWZl5zlDv' },
+  { name: 'Bad Dreams', url: 'https://youtu.be/Qh8QwVYOSVU?si=jFIAV1aae9SHDS-V' },
+  { name: '歌曲 10', url: 'https://youtu.be/VIDEO_ID_10' },
+  { name: '歌曲 11', url: 'https://youtu.be/VIDEO_ID_11' },
+  { name: '歌曲 12', url: 'https://youtu.be/VIDEO_ID_12' },
+  { name: '歌曲 13', url: 'https://youtu.be/VIDEO_ID_13' },
+  { name: '歌曲 14', url: 'https://youtu.be/VIDEO_ID_14' },
+  { name: '歌曲 15', url: 'https://youtu.be/VIDEO_ID_15' },
+  { name: '歌曲 16', url: 'https://youtu.be/VIDEO_ID_16' },
+  { name: '歌曲 17', url: 'https://youtu.be/VIDEO_ID_17' },
+  { name: '歌曲 18', url: 'https://youtu.be/VIDEO_ID_18' },
+  { name: '死別', url: 'https://youtu.be/6Fm-wW_57FY?si=LV5LwuJhSbBfGWlD' },
+  { name: '歌曲 20', url: 'https://youtu.be/VIDEO_ID_20' },
+  { name: '歌曲 21', url: 'https://youtu.be/VIDEO_ID_21' },
+  { name: '歌曲 22', url: 'https://youtu.be/VIDEO_ID_22' },
+  { name: '歌曲 23', url: 'https://youtu.be/VIDEO_ID_23' },
+  { name: '歌曲 24', url: 'https://youtu.be/VIDEO_ID_24' },
+  { name: '歌曲 25', url: 'https://youtu.be/VIDEO_ID_25' },
+  { name: '歌曲 26', url: 'https://youtu.be/VIDEO_ID_26' },
+  { name: '歌曲 27', url: 'https://youtu.be/VIDEO_ID_27' }
+];
 
     /* ============================ */
 
     let step = 0;
-    let score = 0;
+    let answers = [];
 
     const quiz = document.getElementById('quiz');
     const result = document.getElementById('result');
@@ -208,7 +255,7 @@
     showQuestion();
 
     function answer(choice) {
-      score += choice;
+      answers.push(choice);
       step++;
       step < questions.length ? showQuestion() : showResult();
     }
@@ -237,13 +284,67 @@
       return '';
     }
 
+    function getYouTubeId(url) {
+      if (url.includes('youtu.be/')) {
+        return url.split('youtu.be/')[1].split('?')[0];
+      }
+      if (url.includes('watch?v=')) {
+        return url.split('watch?v=')[1].split('&')[0];
+      }
+      return '';
+    }
+
     function showResult() {
       quiz.style.display = 'none';
       result.style.display = 'block';
-      const song = songs[score % songs.length];
+
+      /* ===== 選項組合 → 歌曲對照表 =====
+         0 = 第一個選項
+         1 = 第二個選項
+         2 = 第三個選項
+         例如：'0-1-2' 代表 第一題選1、第二題選2、第三題選3
+      */
+      const map = {
+  '0-0-0': 0,
+  '0-0-1': 1,
+  '0-0-2': 2,
+  '0-1-0': 3,
+  '0-1-1': 4,
+  '0-1-2': 5,
+  '0-2-0': 6,
+  '0-2-1': 7,
+  '0-2-2': 8,
+
+  '1-0-0': 9,
+  '1-0-1': 10,
+  '1-0-2': 11,
+  '1-1-0': 12,
+  '1-1-1': 13,
+  '1-1-2': 14,
+  '1-2-0': 15,
+  '1-2-1': 16,
+  '1-2-2': 17,
+
+  '2-0-0': 18,
+  '2-0-1': 19,
+  '2-0-2': 20,
+  '2-1-0': 21,
+  '2-1-1': 22,
+  '2-1-2': 23,
+  '2-2-0': 24,
+  '2-2-1': 25,
+  '2-2-2': 26
+};
+
+      const key = answers.join('-');
+      const index = map[key] ?? 0; // 找不到就用第 0 首
+      const song = songs[index];
+
       songBox.textContent = song.name;
       const videoId = getYouTubeId(song.url);
       thumb.src = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+      link.href = song.url;
+    }/hqdefault.jpg`;
       link.href = song.url;
     }
   </script>
