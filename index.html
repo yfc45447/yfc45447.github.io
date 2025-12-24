@@ -7,49 +7,63 @@
     body {
       margin: 0;
       min-height: 100vh;
-      background: #000;
+      background: radial-gradient(circle at top, #111 0%, #000 60%);
       color: #fff;
       font-family: "Segoe UI", Arial, sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
+      overflow: hidden;
     }
 
-    /* 空靈感黃色點綴 */
-    body::before, body::after {
-      content: "";
+    /* 空靈感黃色光點背景 */
+    .glow {
       position: fixed;
-      width: 300px;
-      height: 300px;
+      width: 350px;
+      height: 350px;
       background: radial-gradient(circle, rgba(255,215,0,0.35), transparent 70%);
+      filter: blur(10px);
       z-index: 0;
+      animation: float 8s ease-in-out infinite;
     }
 
-    body::before {
-      top: -100px;
-      left: -100px;
-    }
+    .g1 { top: -120px; left: -120px; }
+    .g2 { bottom: -120px; right: -120px; animation-delay: 4s; }
 
-    body::after {
-      bottom: -100px;
-      right: -100px;
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0); }
     }
 
     .card {
       position: relative;
       z-index: 1;
       width: 90%;
-      max-width: 700px;
-      background: rgba(20, 20, 20, 0.9);
-      border-radius: 20px;
-      padding: 30px;
-      box-shadow: 0 0 40px rgba(255, 215, 0, 0.15);
+      max-width: 720px;
+      background: rgba(18, 18, 18, 0.92);
+      border-radius: 24px;
+      padding: 35px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 40px rgba(255,215,0,0.15);
     }
 
     h1 {
       text-align: center;
       margin-top: 0;
+      letter-spacing: 2px;
       color: #ffd700;
+    }
+
+    /* ===== 可自行調整的全域光暈顏色 ===== */
+    :root {
+      --glow-color: rgba(255, 215, 0, 0.75); /* ← 只改這裡就好 */
+    }
+
+    /* 除標題外的通用光暈效果 */
+    .glowable {
+      box-shadow:
+        0 0 12px var(--glow-color),
+        0 0 24px rgba(0,0,0,0.6);
     }
 
     .question {
@@ -58,33 +72,40 @@
 
     .question h2 {
       font-size: 1.2rem;
-      margin-bottom: 15px;
+      margin-bottom: 18px;
     }
 
     .options {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 15px;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 18px;
     }
 
     .option {
-      padding: 15px;
-      border-radius: 15px;
+      padding: 18px;
+      border-radius: 18px;
       text-align: center;
       cursor: pointer;
       font-weight: bold;
-      transition: transform 0.15s, box-shadow 0.15s;
+      transition: transform 0.25s, box-shadow 0.25s;
+      animation: floatBox 6s ease-in-out infinite;
     }
 
     .option:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 20px 30px rgba(0,0,0,0.5);
     }
 
-    /* 每個選項的顏色（你可以自己改） */
-    .c1 { background: #f87171; }
-    .c2 { background: #60a5fa; }
-    .c3 { background: #34d399; }
+    @keyframes floatBox {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+      100% { transform: translateY(0); }
+    }
+
+    /* 選項顏色（可自行修改） */
+    .c1 { background: linear-gradient(135deg, #ffb703, #fb8500); }
+    .c2 { background: linear-gradient(135deg, #60a5fa, #2563eb); }
+    .c3 { background: linear-gradient(135deg, #34d399, #059669); }
 
     .result {
       display: none;
@@ -94,72 +115,86 @@
 
     .song {
       font-size: 1.4rem;
-      margin-top: 10px;
+      margin-top: 15px;
       color: #ffd700;
+    }
+
+    .thumb {
+      margin-top: 20px;
+      width: 100%;
+      max-width: 420px;
+      border-radius: 18px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    }
+
+    a.button {
+      display: inline-block;
+      margin-top: 18px;
+      padding: 10px 24px;
+      border-radius: 30px;
+      background: #ffd700;
+      color: #000;
+      text-decoration: none;
+      font-weight: bold;
     }
 
     button {
       margin-top: 25px;
-      padding: 10px 20px;
+      padding: 10px 24px;
       border: none;
-      border-radius: 20px;
-      background: #ffd700;
-      color: #000;
-      font-size: 1rem;
+      border-radius: 30px;
+      background: #333;
+      color: #fff;
       cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <div class="card">
+  <div class="glow g1"></div>
+  <div class="glow g2"></div>
+
+  <div class="card glowable">
     <h1>🎵 歌曲推薦小測驗</h1>
 
-    <div id="quiz">
-      <div class="question">
-        <h2>Q1. 你現在的心情比較接近？</h2>
-        <div class="options">
-          <div class="option c1" onclick="answer(0)">平靜</div>
-          <div class="option c2" onclick="answer(1)">開心</div>
-          <div class="option c3" onclick="answer(2)">有點低落</div>
-        </div>
-      </div>
-    </div>
+    <div id="quiz"></div>
 
-    <div class="result" id="result">
-      <h2>推薦給你的歌曲是：</h2>
+    <div class="result glowable" id="result">
+      <h2>推薦給你的歌曲</h2>
       <div class="song" id="song"></div>
-      <button onclick="location.reload()">再測一次</button>
+      <img id="thumb" class="thumb glowable" />
+      <br />
+      <a id="link" class="button glowable" target="_blank">前往 YouTube</a>
+      <br />
+      <button class="glowable" onclick="location.reload()">再測一次</button>
     </div>
   </div>
 
   <script>
-    /* =========================
-       你主要會改的地方在這裡
-       ========================= */
+    /* ===== 你主要會改的地方 ===== */
 
-    // 三題題目（每題三個選項）
     const questions = [
+      { title: 'Q1. 你現在的心情比較接近？', options: ['平靜', '開心', '低落'] },
+      { title: 'Q2. 你喜歡什麼時間聽音樂？', options: ['深夜', '下午', '早上'] },
+      { title: 'Q3. 你偏好的音樂感覺？', options: ['溫柔', '節奏感', '情緒濃'] }
+    ];
+
+    // 每首歌只需要放：名稱 + YouTube 連結（縮圖會自動抓）
+    const songs = [
       {
-        title: 'Q1. 你現在的心情比較接近？',
-        options: ['平靜', '開心', '有點低落']
+        name: '歌曲 A',
+        url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
       },
       {
-        title: 'Q2. 你比較喜歡什麼時間聽音樂？',
-        options: ['深夜', '下午', '早上']
+        name: '歌曲 B',
+        url: 'https://youtu.be/3tmd-ClpJxA'
       },
       {
-        title: 'Q3. 你偏好的音樂感覺？',
-        options: ['溫柔', '節奏感', '情緒濃']
+        name: '歌曲 C',
+        url: 'https://www.youtube.com/watch?v=OPf0YbXqDm0'
       }
     ];
 
-    // 歌曲清單（可以放 20 幾首都沒問題）
-    const songs = [
-      '歌曲 A', '歌曲 B', '歌曲 C', '歌曲 D', '歌曲 E',
-      '歌曲 F', '歌曲 G', '歌曲 H', '歌曲 I'
-    ];
-
-    /* ========================= */
+    /* ============================ */
 
     let step = 0;
     let score = 0;
@@ -167,16 +202,15 @@
     const quiz = document.getElementById('quiz');
     const result = document.getElementById('result');
     const songBox = document.getElementById('song');
+    const thumb = document.getElementById('thumb');
+    const link = document.getElementById('link');
+
+    showQuestion();
 
     function answer(choice) {
       score += choice;
       step++;
-
-      if (step < questions.length) {
-        showQuestion();
-      } else {
-        showResult();
-      }
+      step < questions.length ? showQuestion() : showResult();
     }
 
     function showQuestion() {
@@ -184,7 +218,7 @@
       quiz.innerHTML = `
         <div class="question">
           <h2>${q.title}</h2>
-          <div class="options">
+          <div class="options glowable">
             <div class="option c1" onclick="answer(0)">${q.options[0]}</div>
             <div class="option c2" onclick="answer(1)">${q.options[1]}</div>
             <div class="option c3" onclick="answer(2)">${q.options[2]}</div>
@@ -193,11 +227,24 @@
       `;
     }
 
+    function getYouTubeId(url) {
+      if (url.includes('youtu.be/')) {
+        return url.split('youtu.be/')[1].split('?')[0];
+      }
+      if (url.includes('watch?v=')) {
+        return url.split('watch?v=')[1].split('&')[0];
+      }
+      return '';
+    }
+
     function showResult() {
       quiz.style.display = 'none';
       result.style.display = 'block';
-      const index = score % songs.length;
-      songBox.textContent = songs[index];
+      const song = songs[score % songs.length];
+      songBox.textContent = song.name;
+      const videoId = getYouTubeId(song.url);
+      thumb.src = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+      link.href = song.url;
     }
   </script>
 </body>
