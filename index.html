@@ -132,7 +132,6 @@
   <!-- ===== 結果區 ===== -->
   <div id="result" class="card glowable" style="display:none;">
     <h2 id="song"></h2>
-    <img id="thumb" class="glowable">
     <br>
     <a id="link" class="button glowable" target="_blank">前往 YouTube</a>
     <br><br>
@@ -244,8 +243,6 @@
       const song = songs[map[key]];
 
       songBox.textContent = song.name;
-      const id = getYouTubeId(song.url);
-      thumb.src = `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
       link.href = song.url;
     }
 
