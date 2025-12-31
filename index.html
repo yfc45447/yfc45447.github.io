@@ -1,218 +1,164 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
   <meta charset="UTF-8" />
-  <title>歌曲推薦小測驗</title>
+  <title>音樂推薦測驗</title>
+
   <style>
+    /* ===============================
+       🎨 全站顏色設定（只改這裡）
+       =============================== */
+    :root {
+      /* 光暈顏色（所有發光效果） */
+      --glow-color: #FFD700BF;
+
+      /* 背景顏色 */
+      --bg-color: #000000;
+
+      /* 主要文字顏色 */
+      --text-color: #F5F5F5;
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
-      background: radial-gradient(circle at top, #111 0%, #000 60%);
-      color: #fff;
-      font-family: "Segoe UI", Arial, sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      font-family: "Segoe UI", sans-serif;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      overflow: hidden;
+      padding: 40px 20px;
     }
 
-    /* 空靈感黃色光點背景 */
-    .glow {
-      position: fixed;
-      width: 350px;
-      height: 350px;
-      background: radial-gradient(circle, rgba(255,215,0,0.35), transparent 70%);
-      filter: blur(10px);
-      z-index: 0;
-      animation: float 8s ease-in-out infinite;
-    }
-
-    .g1 { top: -120px; left: -120px; }
-    .g2 { bottom: -120px; right: -120px; animation-delay: 4s; }
-
-    @keyframes float {
-      0% { transform: translateY(0); }
-      50% { transform: translateY(-20px); }
-      100% { transform: translateY(0); }
-    }
-
-    .card {
-      position: relative;
-      z-index: 1;
-      width: 90%;
-      max-width: 720px;
-      background: rgba(18, 18, 18, 0.92);
-      border-radius: 24px;
-      padding: 35px;
-      box-shadow: 0 30px 60px #00000099, 0 0 40px rgba(255,215,0,0.15);
-    }
-
+    /* ===== 標題（不加光暈、不漂浮） ===== */
     h1 {
-      text-align: center;
-      margin-top: 0;
+      color: #FFD700;
       letter-spacing: 2px;
-      color: #ffd700;
+      margin-bottom: 40px;
     }
 
-    /* ===== 可自行調整的全域光暈顏色 ===== */
-    :root {
-  /* ===== 全站光暈顏色（所有發光效果） ===== */
-  /* 改這個會影響：選項、卡片、結果、按鈕、縮圖 */
-  /* 使用 Hex 色碼（含透明度）：#RRGGBBAA */
-  /* 最後兩碼 AA 是透明度，00=全透明，FF=不透明 */
-  --glow-color: #FFD700BF; /* 黃色光暈，約 75% 透明 */ 
+    /* ===== 通用卡片 ===== */
+    .card {
+      width: 100%;
+      max-width: 500px;
+      background: rgba(255,255,255,0.05);
+      padding: 30px;
+      border-radius: 16px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
 
-  /* ===== 主背景顏色（整個網頁） ===== */
-  --bg-color: #000000;
-
-  /* ===== 文字主要顏色 ===== */
-  --text-color: #f5f5f5;
-}
-
-    /* 除標題外的通用光暈效果 + 漂浮動畫 */
+    /* ===== 光暈 + 漂浮效果（標題以外都用） ===== */
     .glowable {
       box-shadow:
-        0 0 12px var(--glow-color),
-        0 0 24px rgba(0,0,0,0.6);
-      animation: float 6s ease-in-out infinite;
+        0 0 14px var(--glow-color),
+        0 0 28px #00000099;
+      animation: float 7s ease-in-out infinite;
     }
 
-    /* ===== 漂浮動畫（微微上下＋左右） ===== */
-    /* 看起來舒服，不會暈 */
+    /* 漂浮動畫（很柔） */
     @keyframes float {
-      0% {
-        transform: translate(0px, 0px);
-      }
-      25% {
-        transform: translate(2px, -4px);
-      }
-      50% {
-        transform: translate(0px, -6px);
-      }
-      75% {
-        transform: translate(-2px, -4px);
-      }
-      100% {
-        transform: translate(0px, 0px);
-      }
+      0%   { transform: translate(0, 0); }
+      25%  { transform: translate(2px, -4px); }
+      50%  { transform: translate(0, -6px); }
+      75%  { transform: translate(-2px, -4px); }
+      100% { transform: translate(0, 0); }
     }
 
-    .question {
-      margin-top: 30px;
-    }
-
-    .question h2 {
+    /* ===== 題目文字 ===== */
+    #question {
       font-size: 1.2rem;
-      margin-bottom: 18px;
+      margin-bottom: 20px;
     }
 
+    /* ===== 選項區 ===== */
     .options {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 18px;
+      gap: 12px;
     }
 
     .option {
-      padding: 18px;
-      border-radius: 18px;
-      text-align: center;
-      cursor: pointer;
-      font-weight: bold;
-      transition: transform 0.25s, box-shadow 0.25s;
-      animation: floatBox 6s ease-in-out infinite;
-    }
-
-    .option:hover {
-      transform: translateY(-8px) scale(1.03);
-      box-shadow: 0 20px 30px rgba(0,0,0,0.5);
-    }
-
-    @keyframes floatBox {
-      0% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
-      100% { transform: translateY(0); }
-    }
-
-    /* 選項顏色（可自行修改） */
-    .c1 { background: linear-gradient(135deg, #EEDC3E, #C0E479); }
-    .c2 { background: linear-gradient(135deg, #97CEDC, #B597DC); }
-    .c3 { background: linear-gradient(135deg, #4EFF7E, #9EE9E2); }
-
-    .result {
-      display: none;
-      text-align: center;
-      margin-top: 30px;
-    }
-
-    .song {
-      font-size: 1.4rem;
-      margin-top: 15px;
-      color: #ffd700;
-    }
-
-    .thumb {
-      margin-top: 20px;
-      width: 100%;
-      max-width: 420px;
-      border-radius: 18px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-    }
-
-    a.button {
-      display: inline-block;
-      margin-top: 18px;
-      padding: 10px 24px;
-      border-radius: 30px;
-      background: #EEDC3E;
-      color: #000;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    button {
-      margin-top: 25px;
-      padding: 10px 24px;
+      padding: 12px;
+      border-radius: 12px;
       border: none;
-      border-radius: 30px;
-      background: #97CEDC;
-      color: #fff;
       cursor: pointer;
+      color: white;
+      font-size: 1rem;
+    }
+
+    /* 三個選項的顏色（可自己改） */
+    .option.a { background: #1E3A8A; }
+    .option.b { background: #065F46; }
+    .option.c { background: #7C2D12; }
+
+    /* ===== 結果區 ===== */
+    #result img {
+      width: 100%;
+      border-radius: 12px;
+      margin: 20px 0;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 10px 18px;
+      border-radius: 20px;
+      border: 1px solid var(--glow-color);
+      color: var(--text-color);
+      text-decoration: none;
+      margin-top: 10px;
     }
   </style>
 </head>
+
 <body>
-  <div class="glow g1"></div>
-  <div class="glow g2"></div>
 
-  <div class="card glowable">
-    <h1>🎵 歌曲推薦小測驗</h1>
+  <h1>🎧 音樂推薦測驗</h1>
 
-    <div id="quiz"></div>
+  <!-- ===== 題目區 ===== -->
+  <div id="quiz" class="card glowable">
+    <div id="question"></div>
 
-    <div class="result glowable" id="result">
-      <h2>推薦給你的歌曲</h2>
-      <div class="song" id="song"></div>
-      <img id="thumb" class="thumb glowable" />
-      <br />
-      <a id="link" class="button glowable" target="_blank">前往 YouTube</a>
-      <br />
-      <button class="glowable" onclick="location.reload()">再測一次</button>
+    <div class="options">
+      <button class="option a glowable" onclick="answer(0)"></button>
+      <button class="option b glowable" onclick="answer(1)"></button>
+      <button class="option c glowable" onclick="answer(2)"></button>
     </div>
   </div>
 
-  <script>
-    /* ===== 你主要會改的地方 ===== */
+  <!-- ===== 結果區 ===== -->
+  <div id="result" class="card glowable" style="display:none;">
+    <h2 id="song"></h2>
+    <img id="thumb" class="glowable">
+    <br>
+    <a id="link" class="button glowable" target="_blank">前往 YouTube</a>
+    <br><br>
+    <button class="button glowable" onclick="location.reload()">再測一次</button>
+  </div>
 
+  <!-- ===============================
+       🧠 JavaScript（一定要在最下面）
+       =============================== -->
+  <script>
+    /* ===== 題目設定（你可以自己改） ===== */
     const questions = [
-      { title: 'Q1. 你走在狹窄的林間小道上，前方的路變得開闊，你看見了:', options: ['詭譎駭人的古堡', '莊嚴華麗的宅邸', '溫馨質樸的木屋'] },
-      { title: 'Q2. 你靠近了一些，前方出現了一個人。那個人是:', options: ['身著白衣的美麗女孩', '拄著拐杖的智慧老者', '叛逆不羈的狼族少年'] },
-      { title: 'Q3. 這個人的腳下綻放著優雅的花，這種花是:', options: ['雛菊', '杜鵑', '玫瑰'] }
+      {
+        text: '你走在林間小道上，前方的路變得開闊，你看見了:',
+        options: ['詭譎駭人的古堡', '莊嚴華麗的宅邸', '溫馨質樸的木屋']
+      },
+      {
+        text: '你靠近了一些，前方出現了一個人。那個人是:',
+        options: ['身著白衣的美麗女孩', '拄著拐杖的智慧老者', '叛逆不羈的狼族少年']
+      },
+      {
+        text: '這個人的腳下綻放著優雅的花，這種花是:',
+        options: ['雛菊', '杜鵑', '玫瑰']
+      }
     ];
 
-    // 每首歌只需要放：名稱 + YouTube 連結（縮圖會自動抓）
-    // ===== 27 首歌（你只要改 name 跟 url）=====
-const songs = [
-  { name: 'Tonught you belong to me', url: 'https://youtu.be/x5Splw6Sfj0?si=5OLWperV2gAGYqxt' },
+    /* ===== 27 首歌（只改 name 跟 url） ===== */
+    const songs = [
+  { name: 'Tonight you belong to me', url: 'https://youtu.be/x5Splw6Sfj0?si=5OLWperV2gAGYqxt' },
   { name: 'ド屑', url: 'https://youtu.be/5XehRIb81k8?si=dLkA9fRdI2n2S_FJ' },
   { name: 'Favorite', url: 'https://youtu.be/XKR3SfC6DdQ?si=9bWe3IJcoPEpVm2F' },
   { name: 'Like him', url: 'https://youtu.be/Z0CQf3JDKAY?si=Vty5d_yBK-2bre-d' },
@@ -221,6 +167,7 @@ const songs = [
   { name: '偽物人間40号', url: 'https://youtu.be/MevxhEYIMfs?si=pzxUS3m2mcnzHrm4' },
   { name: 'Nowhere', url: 'https://youtu.be/g6HahdpLNx0?si=NsvHXaOrWZl5zlDv' },
   { name: 'Bad Dreams', url: 'https://youtu.be/Qh8QwVYOSVU?si=jFIAV1aae9SHDS-V' },
+
   { name: '1000年生きてる', url: 'https://youtu.be/3em-J9yYPAo?si=bZV2xlRv_zshPRNs' },
   { name: '天国へ行こう', url: 'https://youtu.be/y808S-awM2E?si=N9Ci8UFQDYV3pT8c' },
   { name: 'Like a star', url: 'https://youtu.be/6nB4rdm81H4?si=ilN3r0nHZ7WAnk_S' },
@@ -230,6 +177,7 @@ const songs = [
   { name: '悪魔の踊り方', url: 'https://youtu.be/v7_Jo4SfICk?si=Lp9m5OhVnJZZHp8L' },
   { name: '化け猫', url: 'https://youtu.be/lMZUE2SvF_c?si=g6F-p8jR3zbQzXxD' },
   { name: 'TV', url: 'https://youtu.be/_wQjZMk78vk?si=_S0x2EIwVB2Wjipp' },
+
   { name: '死別', url: 'https://youtu.be/6Fm-wW_57FY?si=LV5LwuJhSbBfGWlD' },
   { name: '今はいいんだよ。', url: 'https://youtu.be/340OXvocRMM?si=cuRDEocSThybVNYB' },
   { name: 'Умри, если меня не любишь', url: 'https://youtu.be/q1SbKKlVfpA?si=CpX4dxTkfWb_HQL2' },
@@ -241,18 +189,36 @@ const songs = [
   { name: 'ACTOR', url: 'https://youtu.be/-JfqwybRA0g?si=4MpZnTJkcgN7poFj' }
 ];
 
-    /* ============================ */
+    /* ===== 選項組合 → 歌曲對照表 ===== */
+    const map = {};
+    let idx = 0;
+    for (let a = 0; a < 3; a++) {
+      for (let b = 0; b < 3; b++) {
+        for (let c = 0; c < 3; c++) {
+          map[`${a}-${b}-${c}`] = idx++;
+        }
+      }
+    }
 
     let step = 0;
     let answers = [];
 
     const quiz = document.getElementById('quiz');
     const result = document.getElementById('result');
+    const questionEl = document.getElementById('question');
+    const optionBtns = document.querySelectorAll('.option');
     const songBox = document.getElementById('song');
     const thumb = document.getElementById('thumb');
     const link = document.getElementById('link');
 
-    showQuestion();
+    function showQuestion() {
+      quiz.style.display = 'block';
+      result.style.display = 'none';
+
+      const q = questions[step];
+      questionEl.textContent = q.text;
+      optionBtns.forEach((btn, i) => btn.textContent = q.options[i]);
+    }
 
     function answer(choice) {
       answers.push(choice);
@@ -260,92 +226,28 @@ const songs = [
       step < questions.length ? showQuestion() : showResult();
     }
 
-    function showQuestion() {
-  quiz.style.display = 'block';   // ← 一定要有這行
-  result.style.display = 'none';
-
-  const q = questions[step];
-  document.getElementById('question').textContent = q.text;
-
-  const options = document.querySelectorAll('.option');
-  options.forEach((btn, i) => {
-    btn.textContent = q.options[i];
-  });
-    }
-    quiz.style.display = 'block';
     function getYouTubeId(url) {
-      if (url.includes('youtu.be/')) {
-        return url.split('youtu.be/')[1].split('?')[0];
-      }
-      if (url.includes('watch?v=')) {
-        return url.split('watch?v=')[1].split('&')[0];
-      }
-      return '';
-    }
-
-    function getYouTubeId(url) {
-      if (url.includes('youtu.be/')) {
-        return url.split('youtu.be/')[1].split('?')[0];
-      }
-      if (url.includes('watch?v=')) {
-        return url.split('watch?v=')[1].split('&')[0];
-      }
-      return '';
+      return url.includes('youtu.be')
+        ? url.split('youtu.be/')[1]
+        : url.split('v=')[1];
     }
 
     function showResult() {
       quiz.style.display = 'none';
       result.style.display = 'block';
 
-      /* ===== 選項組合 → 歌曲對照表 =====
-         0 = 第一個選項
-         1 = 第二個選項
-         2 = 第三個選項
-         例如：'0-1-2' 代表 第一題選1、第二題選2、第三題選3
-      */
-      const map = {
-  '0-0-0': 0,
-  '0-0-1': 1,
-  '0-0-2': 2,
-  '0-1-0': 3,
-  '0-1-1': 4,
-  '0-1-2': 5,
-  '0-2-0': 6,
-  '0-2-1': 7,
-  '0-2-2': 8,
-
-  '1-0-0': 9,
-  '1-0-1': 10,
-  '1-0-2': 11,
-  '1-1-0': 12,
-  '1-1-1': 13,
-  '1-1-2': 14,
-  '1-2-0': 15,
-  '1-2-1': 16,
-  '1-2-2': 17,
-
-  '2-0-0': 18,
-  '2-0-1': 19,
-  '2-0-2': 20,
-  '2-1-0': 21,
-  '2-1-1': 22,
-  '2-1-2': 23,
-  '2-2-0': 24,
-  '2-2-1': 25,
-  '2-2-2': 26
-};
-
       const key = answers.join('-');
-      const index = map[key] ?? 0; // 找不到就用第 0 首
-      const song = songs[index];
+      const song = songs[map[key]];
 
       songBox.textContent = song.name;
-      const videoId = getYouTubeId(song.url);
-      thumb.src = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
-      link.href = song.url;
-    }/hqdefault.jpg`;
+      const id = getYouTubeId(song.url);
+      thumb.src = `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
       link.href = song.url;
     }
+
+    /* ✅ 一開始一定要呼叫 */
+    showQuestion();
   </script>
+
 </body>
 </html>
